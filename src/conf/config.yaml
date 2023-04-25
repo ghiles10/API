@@ -1,0 +1,8 @@
+database_config: 
+   
+  host: postgresdb
+  port: 5432
+  dbname: postgres
+  user: postgres
+  password: postgres
+  
