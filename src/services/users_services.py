@@ -1,5 +1,5 @@
 from database.utils import conn
-from src.exceptions import UserAlreadyExists 
+from src.exceptions import UserAlreadyExists, UserNotExists
 
 class UserService : 
 
@@ -21,18 +21,28 @@ class UserService :
 
             user_id = data.split(',')[0]
 
-            affected_rows = cur.rowcount
-            if affected_rows < 1:
-                raise UserAlreadyExists(user_id)
-            
-            cur.execute("""
-                    SELECT * FROM users WHERE id = %s
-                """, (user_id,))
-            user_row = cur.fetchone()
-            conn.commit()
-            
+            user_row = self.check_query(cur, user_id, UserAlreadyExists)
+
             return user_row
             
 
     def get_users_info(self, user_id) : 
         
+        with self.conn.cursor() as cur: 
+            
+            cur.execute("SELECT * FROM users where id= %s", (user_id, ) )
+
+            user_row = self.check_query(cur, user_id, UserNotExists)
+
+            return user_row 
+        
+    @classmethod
+    def check_query(cls, cur, user_id, exception_class):
+
+        affected_rows = cur.rowcount
+        if affected_rows < 1:
+            raise exception_class(user_id)
+
+        user_row = cur.fetchone()
+
+        return user_row
