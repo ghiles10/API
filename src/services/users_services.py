@@ -34,6 +34,5 @@ class UserService :
             return user_row
             
 
-
-
-
+    def get_users_info(self, user_id) : 
+        
