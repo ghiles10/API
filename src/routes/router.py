@@ -15,7 +15,7 @@ def create_router():
 
     @router.get("/users/{id}" )
     def get_id(id):
-        return {"message": f"Hello {id}"}   
+        return user_service.get_users_info(id)  
     
     
     @router.post("/add_users",  status_code=201)
@@ -34,7 +34,6 @@ def create_application() -> FastAPI:
     app.include_router(user_router)
     
     return app
-
 
 
 app = create_application() 

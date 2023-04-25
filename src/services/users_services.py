@@ -1,7 +1,7 @@
-from database.utils import conn
 from src.exceptions import UserAlreadyExists, UserNotExists
 
 class UserService : 
+
 
     def __init__(self, conn) -> None:
         self.conn = conn 
@@ -49,6 +49,8 @@ class UserService :
             cur.execute("SELECT * FROM users where id= %s", (user_id, ) )
 
             user_row = self.check_query(cur, user_id, UserNotExists)
+
+            self.conn.commit()
 
             return user_row 
         
