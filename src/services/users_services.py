@@ -6,7 +6,21 @@ class UserService :
     def __init__(self, conn) -> None:
         self.conn = conn 
 
+    @classmethod
+    def check_query(cls, cur, user_id, exception_class):
 
+        affected_rows = cur.rowcount
+        if affected_rows < 1:
+            raise exception_class(user_id)
+
+        try : 
+            user_row = cur.fetchone()
+            return user_row
+        
+        except Exception as e :
+            return user_id
+
+        
     def create_user(self, data) : 
         
         with self.conn.cursor() as cur:
@@ -23,6 +37,8 @@ class UserService :
 
             user_row = self.check_query(cur, user_id, UserAlreadyExists)
 
+            self.conn.commit()
+
             return user_row
             
 
@@ -36,13 +52,3 @@ class UserService :
 
             return user_row 
         
-    @classmethod
-    def check_query(cls, cur, user_id, exception_class):
-
-        affected_rows = cur.rowcount
-        if affected_rows < 1:
-            raise exception_class(user_id)
-
-        user_row = cur.fetchone()
-
-        return user_row
