@@ -1,5 +1,3 @@
-
-
 class UserAlreadyExists(Exception):
     
     def __init__(self, user_id):

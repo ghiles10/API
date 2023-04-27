@@ -51,14 +51,3 @@ def create_router():
         
     return router
 
-def create_application() -> FastAPI:
-
-    user_router = create_router()
-
-    app = FastAPI()
-    app.include_router(user_router)
-    
-    return app
-
-
-app = create_application() 

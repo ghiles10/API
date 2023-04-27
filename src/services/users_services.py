@@ -1,6 +1,6 @@
 from psycopg2.extensions import connection, cursor
 
-from src.exceptions import UserAlreadyExists, UserNotExists
+from src.exceptions.exceptions import UserAlreadyExists, UserNotExists
 from src.models_response.users import User, CreateUserResponse
 
 
