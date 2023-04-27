@@ -1,16 +1,22 @@
+from psycopg2.extensions import connection, cursor
+
 from src.exceptions import UserAlreadyExists, UserNotExists
-from psycopg2.extensions import connection
-from src.models_response.users import User
-
-class UserService : 
+from src.models_response.users import User, CreateUserResponse
 
 
-    def __init__(self, conn :connection ) -> None:
+class UserService:
+
+    """ this class allows for the user to interact with the api"""
+
+    def __init__(self, conn :connection ) -> None :
+
         self.conn = conn 
 
-    @classmethod
-    def check_query(cls, cur, user_id, exception_class):
 
+    @classmethod
+    def check_query(cls, cur:cursor , user_id: str, exception_class: Exception):
+        
+        """ to check if the request works well and returns what is requested  """
 
         # checking behavioral query
         affected_rows = cur.rowcount
@@ -26,7 +32,9 @@ class UserService :
             return user_id
 
         
-    def create_user(self, data: User) -> str : 
+    def create_user(self, data: User) -> CreateUserResponse : 
+
+        """ allow to create user """
         
         with self.conn.cursor() as cur:
 
@@ -44,15 +52,18 @@ class UserService :
 
             self.conn.commit()
 
-            return {"user_id":user_row}
+            return CreateUserResponse(** {"user_id":user_row } ) 
             
 
     def get_users_info(self, user_id : str) -> User : 
+
+        """ retieve user informations """
         
         with self.conn.cursor() as cur: 
             
             cur.execute("SELECT * FROM users where id= %s", (user_id, ) )
 
+            # checking 
             user_row = self.check_query(cur, user_id, UserNotExists)
 
             # Get column names
@@ -63,5 +74,33 @@ class UserService :
 
             self.conn.commit()
 
-            return user_dict
+            return User( **user_dict ) 
         
+    
+    def update_user(self, user_id: str, data_update: User) -> CreateUserResponse : 
+        
+        """update user infos"""
+        
+        if self.get_users_info( user_id) != None : 
+            
+            with self.conn.cursor() as cur:
+                
+                data_update = data_update.dict()
+                cur.execute( """
+                                UPDATE users
+                                SET nom = %s, prenom = %s, age = %s
+                                WHERE id = %s
+                            """,
+                            ( data_update['nom'], data_update['prenom'], data_update['age'], data_update['id'] ) 
+                            )
+                
+                user_row = self.check_query(cur, user_id, UserNotExists)
+
+                self.conn.commit()
+
+                return CreateUserResponse(**{"user_id":user_row } ) 
+                     
+            
+           
+
+    
