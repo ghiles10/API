@@ -39,10 +39,17 @@ def create_router():
     
     @router.put("/update_user", response_model= CreateUserResponse  )
     def update_user(user_id : str, data_update : User) : 
+        
         return user_service.update_user(user_id,data_update )
+ 
 
-    return router 
-
+    @router.delete("/delete_user", response_model = CreateUserResponse )
+    def delete_user(user_id: str) : 
+        
+        return user_service.delete_user(user_id)
+        
+        
+    return router
 
 def create_application() -> FastAPI:
 

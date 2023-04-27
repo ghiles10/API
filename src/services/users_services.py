@@ -101,6 +101,20 @@ class UserService:
                 return CreateUserResponse(**{"user_id":user_row } ) 
                      
             
-           
+    def delete_user(self, user_id: str) -> CreateUserResponse : 
+        
+            with self.conn.cursor() as cur:
 
-    
+                cur.execute( """
+                            DELETE FROM users where id= %s
+                            """,
+                            (user_id, )
+                            )
+
+                
+                user_row = self.check_query(cur, user_id, UserNotExists)
+
+                self.conn.commit()
+
+                return CreateUserResponse(** {"user_id":user_row } ) 
+        
