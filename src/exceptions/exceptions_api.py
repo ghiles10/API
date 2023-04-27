@@ -10,7 +10,6 @@ def exception_handlers_api(app: FastAPI) -> None:
         return JSONResponse(status_code=404, content="User doesn't exist")
 
     @app.exception_handler(UserAlreadyExists)
-    
     def handle_user_not_found_exception(request: Request, exc: UserAlreadyExists):
         return JSONResponse(status_code=400, content="User already exist")
 

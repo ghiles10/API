@@ -25,7 +25,23 @@ services:
       - monreseau    
     links:
       - postgresdb
+ 
+  test-app:
+    build:
+      context: "."
+      args:
+        - ENVIRONMENT=test
+    depends_on:
+      - postgresdb
+    volumes:
+      - .:/app
+    links:
+      - postgresdb
+    networks:
+      - monreseau 
+    restart: "no"
 
+    
   postgresdb:
 
     image: postgres:14.1-alpine
