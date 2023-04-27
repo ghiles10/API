@@ -21,15 +21,14 @@ def create_router():
         tags=["users"]
     )
 
-    @router.get("/users/{id}" )
-    def get_id(id):
+    @router.get("/users/{id}", response_model=User )
+    def get_id(id : str):
         return user_service.get_users_info(id)  
     
     
     @router.post("/add_users",  status_code=201, response_model= CreateUserResponse )
     def add_user(data: User):
         
-
         return user_service.create_user(data)
 
     return router 

@@ -47,7 +47,7 @@ class UserService :
             return {"user_id":user_row}
             
 
-    def get_users_info(self, user_id) : 
+    def get_users_info(self, user_id : str) -> User : 
         
         with self.conn.cursor() as cur: 
             
@@ -55,7 +55,13 @@ class UserService :
 
             user_row = self.check_query(cur, user_id, UserNotExists)
 
+            # Get column names
+            column_names = [desc[0] for desc in cur.description]
+
+            # combining column names with row values
+            user_dict = dict(zip(column_names, user_row))
+
             self.conn.commit()
 
-            return user_row 
+            return user_dict
         

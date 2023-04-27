@@ -12,4 +12,3 @@ class User(BaseModel) :
 class CreateUserResponse(BaseModel) : 
 
     user_id: str
-
