@@ -1,0 +1,26 @@
+name: API CI
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Build docker compose
+        run: make build
+
+      - name: Run tests
+        run: make test
+
+      - name: Take down 
+        run: make down

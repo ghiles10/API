@@ -5,6 +5,8 @@ services:
     build:
       context: ""
 
+    image: api_image
+
     ports:
       - "8000:8000"
       
@@ -22,24 +24,34 @@ services:
       - postgresdb
       
     networks:
-      - monreseau    
+      - monreseau  
+
     links:
       - postgresdb
  
   test-app:
-    build:
-      context: "."
-      args:
-        - ENVIRONMENT=test
+
+    image: api_image
+
+    environment:
+      - ENVIRONMENT=test
+
     depends_on:
       - postgresdb
+
+  
+    command: sh -c 'if [ "$$ENVIRONMENT" = "test" ]; then pip install pytest && python database/app.py && pytest -v -s; fi'
+
     volumes:
       - .:/app
+
     links:
       - postgresdb
+
     networks:
       - monreseau 
-    restart: "no"
+      
+    restart: "always"
 
     
   postgresdb:
