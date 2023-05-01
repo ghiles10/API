@@ -40,7 +40,7 @@ services:
       - postgresdb
 
   
-    command: sh -c 'if [ "$$ENVIRONMENT" = "test" ]; then pip install pytest && python database/app.py && pytest -v -s; fi'
+    command: sh -c 'if [ "$$ENVIRONMENT" = "test" ]; then pip install pytest && python database/app.py && pytest -v -s && exit $$?; fi'
 
     volumes:
       - .:/app
