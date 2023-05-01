@@ -6,7 +6,6 @@ on:
       - "main"
   pull_request:
 
-
 jobs:
 
   build:
@@ -23,4 +22,5 @@ jobs:
         run: make test
 
       - name: Take down 
-        run: make down
+        if: ${{ always() }}
+        run: make down 
